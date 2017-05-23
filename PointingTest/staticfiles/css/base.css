@@ -1,0 +1,145 @@
+/*
+ * Basic Styles
+ */
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    color: #272727;
+    outline: none;
+    border: none;
+
+    /* for better fot anti-aliasing */
+    -webkit-font-smoothing: subpixel-antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+::selection{
+    background: #003cff;
+}
+
+::-moz-selection{
+    background: #003cff;
+}
+
+body{
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+a{
+    text-decoration: none;
+}
+
+button{
+    border: 0;
+    cursor: pointer;
+}
+
+#wrapper{
+    width: 100%;
+    height: 100%;
+}
+
+/*
+ * Header styles
+ */
+
+header{
+    display: block;
+    width: 100%;
+    height: 100px;
+    padding: 40px 20px 30px 20px;
+}
+
+header .header-logo{
+    width: 60px;
+    height: 100%;
+    position: relative;
+    float: left;
+}
+
+header .header-logo .logo-circle{
+    display: block;
+    width: 30px;
+    height: 100%;
+    border-radius: 15px;
+    float: left;
+    margin-left: -15px;
+    background-color: #737373;
+    z-index: 20;
+    position: relative;
+}
+
+header .header-logo .logo-circle:first-child{
+    margin-left: 0;
+    background-color: #272727;
+    z-index: 30;
+}
+
+header .header-logo .logo-circle:last-child{
+    background-color: #bfbfbf;
+    z-index: 10;
+}
+
+header .header-title{
+    display: block;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 30px;
+    text-transform: uppercase;
+    float: left;
+    margin-left: 13px;
+}
+
+header .header-notice{
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 30px;
+    color: #737373;
+    float: left;
+    margin-left: 11px;
+}
+
+/*
+ * Navigation styles
+ */
+
+nav{
+    display: block;
+    width: 100%;
+    height: 60px;
+    padding: 0px 20px 30px 20px;
+}
+
+nav .nav-link{
+    display: inline-block;
+    height: 100%;
+    border: 1px solid #272727;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 30px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0 13px;
+    float: left;
+    margin-right: 15px;
+}
+
+nav .nav-link:hover{
+    background: #bfbfbf;
+}
+
+nav .nav-link.sel{
+    color: #fff;
+    background: #272727;
+}
+
+nav .nav-link.sel:hover{
+    background: #272727;
+}
