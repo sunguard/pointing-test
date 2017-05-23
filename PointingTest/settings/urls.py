@@ -7,9 +7,9 @@ from django.contrib import admin
 urlpatterns = [
     # apps
     url(r'^$', lambda x: redirect('/about/')),
-    url(r'^about/', include('apps.about.urls')),
-    url(r'^publications/', include('apps.publications.urls')),
-    url(r'^test/', include('apps.pointing.urls')),
+    url(r'^about/', include('myapps.about.urls')),
+    url(r'^publications/', include('myapps.publications.urls')),
+    url(r'^test/', include('myapps.pointing.urls')),
 
     # admin
     url(r'^admin/', admin.site.urls),
