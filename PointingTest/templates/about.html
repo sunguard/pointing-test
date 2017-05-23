@@ -3,11 +3,33 @@
 
 {% block nav-about %}sel{% endblock %}
 
-{% block js %}{% endblock %}
-{% block css %}{% endblock %}
+{% block js %}
+<!--<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>-->
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/about.css' %}">
+{% endblock %}
 
 {% block content %}
 
-About Page
+<div class="about-image wrapper">
+    <img class="image-content" src="{{ intro.image.url }}">
+</div>
+<div class="about-text wrapper">
+    <p class="text-content">
+        {{ intro.content }}
+    </p>
+</div>
+<div class="about-zipfile wrapper">
+    {% if intro.zipfile %}
+    <a class="zipfile-content" href="{{ intro.zipfile.url }}" download>
+        Download zipfile
+    </a>
+    {% else %}
+    <span class="zipfile-content deactivated">
+        Download zipfile (Not available now)
+    </span>
+    {% endif %}
+</div>
 
 {% endblock %}

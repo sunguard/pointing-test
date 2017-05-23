@@ -1,0 +1,40 @@
+.wrapper{
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.about-image{
+    width: 1000px;
+    max-width: 100%;
+    margin-bottom: 60px;
+}
+
+.about-image .image-content{
+    width: 100%;
+}
+
+.about-text{
+    width: 100%;
+}
+
+.about-text .text-content{
+    width: 100%;
+    font-size: 15px;
+}
+
+.about-zipfile{
+    width: 100%;
+}
+
+.about-zipfile .zipfile-content{
+    display: inline-block;
+    font-size: 15px;
+    text-decoration: underline;
+}
+
+.about-zipfile .zipfile-content.deactivated{
+    color: #bfbfbf;
+    border-color: #bfbfbf;
+    text-decoration: line-through;
+}
