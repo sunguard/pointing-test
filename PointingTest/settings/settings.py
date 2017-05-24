@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # admin
+    'jsoneditor',
+
     # apps
     'myapps.about',
     'myapps.publications',
