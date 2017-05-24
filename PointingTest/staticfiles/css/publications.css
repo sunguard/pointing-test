@@ -1,0 +1,62 @@
+.pub-list{
+    display: block;
+    width: 100%;
+}
+
+.pub-item{
+    display: block;
+    list-style: none;
+    width: 100%;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px dashed #bfbfbf;
+}
+
+.pub-item:last-child{
+    border-bottom: none;
+}
+
+.pub-item .item-title{
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0.02em;
+}
+
+.pub-item .item-link{
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+}
+
+.pub-item .item-link:hover{
+    text-decoration: underline;
+    text-decoration-color: #bfbfbf;
+}
+
+.pub-item .item-info{
+    width: 100%;
+    font-size: 15px;
+    line-height: 20px;
+    color: #bfbfbf;
+}
+
+.pub-item .item-venue{
+    font-size: 15px;
+    font-weight: 500;
+    color: #737373;
+    line-height: 20px;
+}
+
+.pub-item .item-authors{
+    font-size: 15px;
+    color: #737373;
+    line-height: 20px;
+}
+
+.pub-item .item-abstract{
+    font-size: 15px;
+    line-height: 19px;
+    margin-top: 12px;
+}

@@ -21,6 +21,7 @@
 .about-text .text-content{
     width: 100%;
     font-size: 15px;
+    line-height: 19px;
 }
 
 .about-zipfile{

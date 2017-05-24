@@ -1,0 +1,34 @@
+
+
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block nav-pub %}sel{% endblock %}
+
+{% block js %}
+<!--<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>-->
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/publications.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<ul class="pub-list">
+    {% for pub in pubs %}
+    <li class="pub-item">
+        <h3 class="item-title">
+            <a class="item-link" href="{{ pub.link }}">{{ pub.title }}</a>
+        </h3>
+        <div class="item-info">
+            <span class="item-venue">{{ pub.venue }}</span>&nbsp;&nbsp;|&nbsp;
+            <span class="item-authors">{{ pub.authors }}</span>
+        </div>
+        <p class="item-abstract">
+            {{ pub.abstract }}
+        </p>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
