@@ -3,4 +3,11 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 
-# Create your views here.
+def index(request):
+    pass
+
+def get_setting(request):
+    pass
+
+def save_log(request):
+    pass
