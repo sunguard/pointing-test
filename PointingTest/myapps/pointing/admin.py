@@ -8,7 +8,14 @@ from jsonfield import JSONField
 from jsoneditor.forms import JSONEditor
 
 class SettingAdmin(admin.ModelAdmin):
-    list_display = ('mode',)
+    list_display = ('mode', 'activate',)
+
+    formfield_overrides = {
+        JSONField: { 'widget': JSONEditor },
+    }
+
+class ResultAdmin(admin.ModelAdmin):
+    list_display = ('setting',)
 
     formfield_overrides = {
         JSONField: { 'widget': JSONEditor },
@@ -17,3 +24,4 @@ class SettingAdmin(admin.ModelAdmin):
 # register admin pages
 
 admin.site.register(Setting, SettingAdmin)
+admin.site.register(Result, ResultAdmin)

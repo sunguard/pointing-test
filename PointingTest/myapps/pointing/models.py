@@ -14,3 +14,11 @@ class Setting(models.Model):
 
     mode = models.CharField(max_length=3, choices=MODE_CHOICES, default='SP')
     env = JSONField()
+    activate = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.mode
+
+class Result(models.Model):
+    setting = models.ForeignKey(Setting, related_name='results')
+    logs = JSONField()
