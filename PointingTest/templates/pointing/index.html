@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block nav-test %}sel{% endblock %}
+
+{% block js %}
+<!--<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>-->
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/pointing-index.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="task-wrapper">
+    <ul class="input-glist">
+        <h3 class="input-title">
+            User Info<br>
+            <span>Please select your info for testing.</span>
+        </h3>
+        <li class="input-gitem">
+            <h4 class="input-subtitle">Age</h4>
+            <input class="input-box size-6 input-age" type="nubmer" name="age" autofocus>
+        </li>
+        <li class="input-gitem">
+            <h4 class="input-subtitle">Gender</h4>
+            <div class="input-box-wrapper size-2">
+                <input class="input-box" type="radio" name="gender" value="male" checked>&nbsp;&nbsp;Female
+            </div>
+            <div class="input-box-wrapper size-2">
+                <input class="input-box" type="radio" name="gender" value="female">&nbsp;&nbsp;Male
+            </div>
+            <div class="input-box-wrapper size-2">
+                <input class="input-box" type="radio" name="gender" value="other">&nbsp;&nbsp;Other
+            </div>
+        </li>
+        <li class="input-gitem">
+            <h4 class="input-subtitle">Musician</h4>
+            <div class="input-box-wrapper size-2">
+                <input class="input-box" type="radio" name="musician" value="yes">&nbsp;&nbsp;Yes
+            </div>
+            <div class="input-box-wrapper size-2">
+                <input class="input-box" type="radio" name="musician" value="no" checked>&nbsp;&nbsp;No
+            </div>
+        </li>
+        <li class="input-gitem">
+            <h4 class="input-subtitle">Task</h4>
+            <select class="input-box size-6" name="task">
+                <option value="sp">Spatial Pointing</option>
+                <option value="tp">Temporal Pointing</option>
+                <option value="stp">Spatial-Temporal Pointing</option>
+            </select>
+        </li>
+        <button class="input-submit">Submit</button>
+    </ul>
+</div>
+
+{% endblock %}
