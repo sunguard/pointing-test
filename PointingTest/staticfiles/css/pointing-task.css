@@ -36,7 +36,7 @@ main{
     box-shadow: 2px 2px 0 #272727;
 }
 
-.notice-start-wraper{
+.notice-start-wrapper{
     width: 100%;
     height: 100%;
     position: absolute;
@@ -165,7 +165,7 @@ main{
     line-height: 30px;
 }
 
-.progress-number{
+.progress-number, .progress-total{
     font-size: 15px;
     font-weight: 700;
     color: #fff;

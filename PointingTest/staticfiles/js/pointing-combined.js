@@ -44,6 +44,9 @@ Task.init = function(){
             trigger: $('.task-trigger'),
             blinker: $('.task-blinker'),
             glitter: $('.task-glitter'),
+
+            0: $('.task-objects.position-0'),
+            1: $('.task-objects.position-1'),
         },
 
         num_trial: $('.task-trial'),
@@ -57,7 +60,8 @@ Task.init = function(){
         Task.current = -1;
         Task.trial = -1;
 
-        Task.load("TP"); // load TemporalPointing task
+        Task.load("STP"); // load Spatial-Temporal Pointing task
+        Task.status = false;
         Task.register();
     });
 };
@@ -78,6 +82,17 @@ Task.checkUser = function(callback){
 
 Task.register = function(){
     $(Task.dom.btn_start).click({env_num: 0}, Task.start);
+    $(window).bind('beforeunload', Task.leave);
+};
+
+Task.leave = function(){
+    if(!Task.status){
+        var ch = confirm("Are you leaving?");
+
+        if(ch){
+
+        }
+    }
 };
 
 Task.load = function(mode){
@@ -103,18 +118,19 @@ Task.load = function(mode){
 Task.ready = function(settings){
     var _env = [];
 
-    for(var i = 0; i < settings.duration.length; i++){
-        for(var j = 0; j < settings.interval.length; j++){
+    for(var i = 0; i < settings.temporal.length; i++){
+        for(var j = 0; j < settings.spatial.length; j++){
             _env.push({
-                "duration": settings.duration[i],
-                "interval": settings.interval[j]
+                "width": settings.spatial[i].width,
+                "distance": settings.spatial[i].distance,
+                "duration": settings.temporal[j].duration,
+                "interval": settings.temporal[j].interval
             });
         }
     }
 
     Task.settings.color = settings.color;
     Task.settings.trial = settings.trial;
-    Task.settings.size = settings.radius * 2;
     Task.settings.env = randomize(_env);
 
     $(Task.dom.num_progress_total).text(Task.settings.env.length);
@@ -141,14 +157,17 @@ Task.start = function(e){
     // SET THE OBJECTS' POSITIONS & COLORS
 
     $(Task.dom.objects.wrapper).css({
-        width: Task.settings.size + 'mm',
-        height: Task.settings.size + 'mm',
-        marginTop: - Task.settings.size / 2 + 'mm',
-        marginLeft: - Task.settings.size / 2 + 'mm'
+        width: env.width + 'mm',
+        height: env.width + 'mm',
+        marginTop: - env.width / 2 + 'mm'
     });
 
-    $(Task.dom.objects.blinker).css({
-        background: Task.settings.color
+    $(Task.dom.objects[0]).css({
+        marginLeft: - (env.width / 2 + env.distance / 2) + 'mm'
+    });
+
+    $(Task.dom.objects[1]).css({
+        marginLeft: (env.distance / 2 - env.width / 2) + 'mm'
     });
 
     // SET THE LOGGING ENVIRONMENT
@@ -164,7 +183,8 @@ Task.start = function(e){
         Task.logs[env_num].env = {
             color: Task.settings.color,
             trial: Task.settings.trial,
-            radius: Task.settings.size / 2,
+            width: Task.settings.env[env_num].width,
+            distance: Task.settings.env[env_num].distance,
             duration: Task.settings.env[env_num].duration,
             interval: Task.settings.env[env_num].interval,
         };
@@ -178,6 +198,7 @@ Task.start = function(e){
 
         // START THE TEST
 
+        Task.position = 0;
         Task.actor(env_num);
     });
 };
@@ -188,15 +209,27 @@ Task.actor = function(env_num){
 
     Task.loopStarter(duration, interval, {
         show: function(){
-            $(Task.dom.objects.wrapper).addClass('activate');
-            $(Task.dom.objects.blinker).show();
+            $(Task.dom.objects[Task.position]).addClass('activate');
+            $(Task.dom.objects.blinker[Task.position]).css({
+                'background': Task.settings.color,
+                'borderColor': Task.settings.color
+            });
         },
         hide: function(){
-            $(Task.dom.objects.wrapper).removeClass('activate triggered');
-            $(Task.dom.objects.blinker).hide();
+            $(Task.dom.objects[Task.position]).removeClass('activate triggered');
+            $(Task.dom.objects.blinker[Task.position]).css({
+                'background': 'transparent',
+                'borderColor': '#bfbfbf'
+            });
 
             Task.trial -= 1;
             $(Task.dom.num_trial).text(Task.trial);
+
+            if(Task.position == 0){
+                Task.position = 1;
+            }else{
+                Task.position = 0;
+            }
 
             if(Task.trial == 0){
                 Task.loopStopper();
@@ -220,16 +253,16 @@ Task.loopStopper = function(){
 };
 
 Task.trigger = function(e){
-    var status = $(Task.dom.objects.wrapper).hasClass('activate'),
-        status_t = $(Task.dom.objects.wrapper).hasClass('triggered');
+    var status = $(Task.dom.objects[Task.position]).hasClass('activate'),
+        status_t = $(Task.dom.objects[Task.position]).hasClass('triggered');
 
     var _d = new Date();
 
     if(status){
         // EFFECT & CHANGE
 
-        $(Task.dom.objects.wrapper).removeClass('activate').addClass('triggered');
-        $(Task.dom.objects.glitter).fadeIn(TIME.default_glitter_on, function(){
+        $(Task.dom.objects[Task.position]).removeClass('activate').addClass('triggered');
+        $(Task.dom.objects.glitter[Task.position]).fadeIn(TIME.default_glitter_on, function(){
             $(this).fadeOut(TIME.default_glitter_off);
         });
 

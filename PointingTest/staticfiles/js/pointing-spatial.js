@@ -51,6 +51,7 @@ Task.init = function(){
 
         num_trial: $('.task-trial'),
         num_progress: $('.progress-number'),
+        num_progress_total: $('.progress-total'),
         bar_progress: $('.progress-bar'),
     };
 
@@ -65,12 +66,12 @@ Task.init = function(){
 };
 
 Task.checkUser = function(callback){
-    Task.user = {
-        info: JSON.parse(localStorage['user_info']) || null,
-        device: {} // save user device information, etc
-    };
+    if(localStorage['user_info']){
+        Task.user = {
+            info: JSON.parse(localStorage['user_info']),
+            device: {} // save user device information, etc
+        };
 
-    if(Task.user.info){
         callback();
     }else{
         alert("Invalid user data.\nRedirect to the front page.");
@@ -117,6 +118,8 @@ Task.ready = function(settings){
     Task.settings.color = settings.color;
     Task.settings.trial = settings.trial;
     Task.settings.env = randomize(_env);
+
+    $(Task.dom.num_progress_total).text(Task.settings.env.length);
 
     setTimeout(function(){
         $(Task.dom.btn_loading).hide();

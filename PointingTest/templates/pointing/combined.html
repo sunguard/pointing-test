@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block nav-test %}sel{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'js/pointing-combined.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        Task.init();
+    });
+</script>
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/pointing-task.css' %}">
+<style>
+.task-objects .task-trigger{
+    border: 1px dashed #bfbfbf;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="notice-area">
+    <button class="notice-loading" disabled>
+        Loading...
+    </button>
+    <div class="notice-start-wrapper">
+        <button class="notice-start">
+            Start the test
+        </button>
+        <p class="notice-start-text">
+            " Click the dots as much as possible. "
+        </p>
+    </div>
+    <button class="notice-next">
+        Continue...
+    </button>
+    <button class="notice-result">
+        See the result
+    </button>
+</div>
+<div class="task-area">
+    <div class="task-objects position-0">
+        <button class="task-trigger"></button>
+        <button class="task-blinker" disabled></button>
+        <button class="task-glitter" disabled></button>
+    </div>
+    <div class="task-objects position-1">
+        <button class="task-trigger"></button>
+        <button class="task-blinker" disabled></button>
+        <button class="task-glitter" disabled></button>
+    </div>
+    <div class="task-trial">
+        30
+    </div>
+</div>
+<div class="progress-area">
+    <div class="progress-bar"><span class="progress-number">0</span> / <span class="progress-total">6</span></div>
+</div>
+
+{% endblock %}
