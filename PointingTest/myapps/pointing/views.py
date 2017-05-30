@@ -12,12 +12,18 @@ def index(request):
 def spatial(request):
     return render(request, 'pointing/spatial.html')
 
+def temporal(request):
+    return render(request, 'pointing/temporal.html')
+
+def combined(request):
+    return render(request, 'pointing/combined.html')
+
 # API
 
 def rest_load(request):
     try:
         _mode = request.GET.get("mode", None)
-        _setting = Setting.objects.get(mode=_mode)
+        _setting = Setting.objects.get(mode=_mode, activate=True)
 
         output = {
             'settings': _setting.env

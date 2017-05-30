@@ -4,7 +4,12 @@
 {% block nav-test %}sel{% endblock %}
 
 {% block js %}
-<!--<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>-->
+<script type="text/javascript" src="{% static 'js/pointing-index.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        Data.init();
+    });
+</script>
 {% endblock %}
 {% block css %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/pointing-index.css' %}">
@@ -25,10 +30,10 @@
         <li class="input-gitem">
             <h4 class="input-subtitle">Gender</h4>
             <div class="input-box-wrapper size-2">
-                <input class="input-box" type="radio" name="gender" value="male" checked>&nbsp;&nbsp;Female
+                <input class="input-box" type="radio" name="gender" value="female" checked>&nbsp;&nbsp;Female
             </div>
             <div class="input-box-wrapper size-2">
-                <input class="input-box" type="radio" name="gender" value="female">&nbsp;&nbsp;Male
+                <input class="input-box" type="radio" name="gender" value="male">&nbsp;&nbsp;Male
             </div>
             <div class="input-box-wrapper size-2">
                 <input class="input-box" type="radio" name="gender" value="other">&nbsp;&nbsp;Other

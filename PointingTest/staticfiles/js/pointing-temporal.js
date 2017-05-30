@@ -23,7 +23,7 @@ function randomize(arr){
 };
 
 /*
- * Spatial Pointing Task
+ * Temporal Pointing Task
  */
 
 var Task = {};
@@ -44,9 +44,6 @@ Task.init = function(){
             trigger: $('.task-trigger'),
             blinker: $('.task-blinker'),
             glitter: $('.task-glitter'),
-
-            0: $('.task-objects.position-0'),
-            1: $('.task-objects.position-1'),
         },
 
         num_trial: $('.task-trial'),
@@ -59,7 +56,7 @@ Task.init = function(){
         Task.current = -1;
         Task.trial = -1;
 
-        Task.load("SP"); // load SpatialPointing task
+        Task.load("TP"); // load TemporalPointing task
         Task.register();
     });
 };
@@ -105,17 +102,18 @@ Task.load = function(mode){
 Task.ready = function(settings){
     var _env = [];
 
-    for(var i = 0; i < settings.distance.length; i++){
-        for(var j = 0; j < settings.width.length; j++){
+    for(var i = 0; i < settings.duration.length; i++){
+        for(var j = 0; j < settings.interval.length; j++){
             _env.push({
-                "distance": settings.distance[i],
-                "width": settings.width[j]
+                "duration": settings.duration[i],
+                "interval": settings.interval[j]
             });
         }
     }
 
     Task.settings.color = settings.color;
     Task.settings.trial = settings.trial;
+    Task.settings.size = settings.radius * 2;
     Task.settings.env = randomize(_env);
 
     setTimeout(function(){
@@ -140,17 +138,10 @@ Task.start = function(e){
     // SET THE OBJECTS' POSITIONS & COLORS
 
     $(Task.dom.objects.wrapper).css({
-        width: env.width + 'mm',
-        height: env.width + 'mm',
-        marginTop: - env.width / 2 + 'mm'
-    });
-
-    $(Task.dom.objects[0]).css({
-        marginLeft: - (env.width / 2 + env.distance / 2) + 'mm'
-    });
-
-    $(Task.dom.objects[1]).css({
-        marginLeft: (env.distance / 2 - env.width / 2) + 'mm'
+        width: Task.settings.size + 'mm',
+        height: Task.settings.size + 'mm',
+        marginTop: - Task.settings.size / 2 + 'mm',
+        marginLeft: - Task.settings.size / 2 + 'mm'
     });
 
     $(Task.dom.objects.blinker).css({
@@ -170,8 +161,9 @@ Task.start = function(e){
         Task.logs[env_num].env = {
             color: Task.settings.color,
             trial: Task.settings.trial,
-            width: Task.settings.env[env_num].width,
-            distance: Task.settings.env[env_num].distance
+            radius: Task.settings.size / 2,
+            duration: Task.settings.env[env_num].duration,
+            interval: Task.settings.env[env_num].interval,
         };
 
         var _d = new Date();
@@ -179,58 +171,76 @@ Task.start = function(e){
         Task.logs[env_num].start = _d.getTime();
         Task.logs[env_num].timestamps = []; // 0: timestamp, 1: success/failure
 
-        $(Task.dom.objects[0]).addClass('activate');
         $(Task.dom.objects.trigger).bind('click.trigger', Task.trigger);
+
+        // START THE TEST
+
+        Task.actor(env_num);
     });
 };
 
+Task.actor = function(env_num){
+    var duration = Task.settings.env[env_num].duration,
+        interval = Task.settings.env[env_num].interval;
+
+    Task.loopStarter(duration, interval, {
+        show: function(){
+            $(Task.dom.objects.wrapper).addClass('activate');
+            $(Task.dom.objects.blinker).show();
+        },
+        hide: function(){
+            $(Task.dom.objects.wrapper).removeClass('activate triggered');
+            $(Task.dom.objects.blinker).hide();
+
+            Task.trial -= 1;
+            $(Task.dom.num_trial).text(Task.trial);
+
+            if(Task.trial == 0){
+                Task.loopStopper();
+                Task.next();
+            }
+        }
+    });
+};
+
+Task.loopStarter = function(duration, interval, callback){
+    Task.loop = setInterval(function(){
+        callback.show();
+        setTimeout(function(){
+            callback.hide();
+        }, duration);
+    }, interval);
+};
+
+Task.loopStopper = function(){
+    clearInterval(Task.loop);
+};
+
 Task.trigger = function(e){
-    var wrapper = $(e.target).parent(),
-        pos = $(wrapper).attr('class').split(' ')[1].split('-')[1],
-        _pos = -1;
+    var status = $(Task.dom.objects.wrapper).hasClass('activate'),
+        status_t = $(Task.dom.objects.wrapper).hasClass('triggered');
 
-    if(pos == 0){
-        _pos = 1;
-    }else{
-        _pos = 0;
-    }
-
-    var status = $(wrapper).hasClass('activate');
+    var _d = new Date();
 
     if(status){
         // EFFECT & CHANGE
 
-        $(Task.dom.objects[pos]).removeClass('activate');
-        $(Task.dom.objects[_pos]).addClass('activate');
-
-        $(Task.dom.objects.blinker[pos]).hide();
-        $(Task.dom.objects.blinker[_pos]).show();
-
-        $(Task.dom.objects.glitter[pos]).fadeIn(TIME.default_glitter_on, function(){
+        $(Task.dom.objects.wrapper).removeClass('activate').addClass('triggered');
+        $(Task.dom.objects.glitter).fadeIn(TIME.default_glitter_on, function(){
             $(this).fadeOut(TIME.default_glitter_off);
         });
 
-        // TRIAL CHECK
+        // LOG
 
-        Task.trial -= 1;
-
-        if(Task.trial >= 0){
-            $(Task.dom.num_trial).text(Task.trial);
-
-            // SUCCESS LOGGING
-
-            var _d = new Date();
-
-            Task.logs[Task.current].timestamps.push([
-                _d.getTime(), "success"
-            ]);
-        }
-
-        if(Task.trial == 0){
-            Task.next();
-        }
-    }else{
+        Task.logs[Task.current].timestamps.push([
+            _d.getTime(), "success"
+        ]);
+    }else if(!status_t){
         // DO SOMETHING WITH TEMOPORAL POINTING TASK
+
+        Task.logs[Task.current].timestamps.push([
+            _d.getTime(), "failure"
+        ]);
     }
 };
 

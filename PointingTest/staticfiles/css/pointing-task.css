@@ -1,3 +1,7 @@
+html, body{
+    overflow: hidden;
+}
+
 main{
     position: absolute;
     top: 0;
@@ -127,7 +131,7 @@ main{
 .task-trial{
     width: 100px;
     height: 40px;
-    margin: 30px 0 0 -50px;
+    margin: 60px 0 0 -50px;
     font-size: 27px;
     font-weight: 700;
     text-align: center;
@@ -151,7 +155,7 @@ main{
     position: absolute;
     top: 0;
     left: 0;
-    width: 33.33%;
+    width: 0;
     height: 30px;
     background: #272727;
     text-align: center;
