@@ -21,4 +21,4 @@ class Setting(models.Model):
 
 class Result(models.Model):
     setting = models.ForeignKey(Setting, related_name='results')
-    logs = JSONField()
+    data = JSONField()

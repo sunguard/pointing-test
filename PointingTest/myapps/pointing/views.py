@@ -38,8 +38,34 @@ def rest_load(request):
     except:
         return HttpResponseBadRequest("ERROR: rest_load failed. (Modes should be in capital letters.)")
 
-def save_logs(request):
-    pass
+def rest_save(request):
+    try:
+        _mode = request.POST.get("mode", None)
+        _user = json.loads(request.POST.get("user", None))
+        _settings = json.loads(request.POST.get("settings", None))
+        _logs = json.loads(request.POST.get("logs", None))
+        _results = json.loads(request.POST.get("results", None))
+
+        _setting = Setting.objects.get(mode=_mode, activate=True)
+
+        _data = {
+            "user": _user,
+            "settings": _settings,
+            "logs": _logs,
+            "results": _results
+        }
+
+        result = Result(
+            setting = _setting,
+            data = _data
+        )
+
+        result.save()
+
+        return HttpResponse()
+
+    except:
+        return HttpResponseBadRequest("ERROR: rest_save failed.")
 
 def rest_result_spatial(request):
     try:
@@ -76,17 +102,26 @@ def rest_result_spatial(request):
 
         a, b, r, p, err = linregress(xdata, ydata) # y = a * x + b
 
+        _xdata = []
+        _ydata = []
+
+        for _x in numpy.arange(0, xdata.max() + 1, 0.1):
+            _xdata.append(_x)
+            _ydata.append(_x * a + b)
+
         output = {
             'a': numpy.round(a, decimals=4),
             'b': numpy.round(b, decimals=4),
             'rsq': numpy.round(r ** 2, decimals=4),
             'x': list(xdata),
-            'y': list(ydata)
+            'y': list(ydata),
+            '_x': list(_xdata),
+            '_y': list(_ydata)
         }
 
         return JsonResponse(output)
     except:
-        return HttpResponseBadRequest("ERROR: rest_spatial_result failed.")
+        return HttpResponseBadRequest("ERROR: rest_result_spatial failed.")
 
 def rest_result_temporal(request):
     try:
@@ -127,17 +162,26 @@ def rest_result_temporal(request):
         tot = numpy.sum((ydata - numpy.mean(ydata)) ** 2)
         rsq = 1 - (res / tot)
 
+        _xdata = []
+        _ydata = []
+
+        for _x in numpy.arange(0, xdata.max() + 1, 0.1):
+            _xdata.append(_x)
+            _ydata.append(func(_x, opt[0], opt[1]))
+
         output = {
             's': numpy.round(opt[0], decimals=4),
             'm': numpy.round(opt[1], decimals=4),
             'rsq': numpy.round(rsq, decimals=4),
             'x': list(xdata),
-            'y': list(ydata)
+            'y': list(ydata),
+            '_x': list(_xdata),
+            '_y': list(_ydata)
         }
 
         return JsonResponse(output)
     except:
-        return HttpResponseBadRequest("ERROR: rest_spatial_result failed.")
+        return HttpResponseBadRequest("ERROR: rest_result_temporal failed.")
 
 def rest_result_combined(request):
     pass

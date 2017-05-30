@@ -37,6 +37,7 @@ Task.init = function(){
         area_notice: $('.notice-area'),
         area_notice_start: $('.notice-start-wrapper'),
         area_task: $('.task-area'),
+        area_result: $('.result-area'),
 
         objects: {
             all: $('.task-objects>button'),
@@ -115,7 +116,6 @@ Task.ready = function(settings){
         }
     }
 
-    Task.settings.id = settings.id;
     Task.settings.color = settings.color;
     Task.settings.trial = settings.trial;
     Task.settings.env = randomize(_env);
@@ -274,7 +274,82 @@ Task.result = function(){
     });
 
     _rest.done(function(data){
+        $(Task.dom.btn_result).click({ result: data }, Task.drawGraph);
+        Task.save(data);
+    });
 
+    _rest.fail(function(err){
+        console.error(err.responseText);
+    });
+};
+
+Task.drawGraph = function(e){
+    $(Task.dom.area_result).fadeIn();
+
+    var canvas = document.getElementById('result-graph'),
+        result = e.data.result;
+
+    var title = "Spatial Pointing (" + "MT = " + result.a + " x ID + " + result.b + ") / R-Sq: " + result.rsq;
+
+    var data = [
+        {
+            x: result.x,
+            y: result.y,
+            mode: 'markers',
+            type: 'scatter',
+            marker: {
+                size: 5,
+                color: '#272727'
+            },
+        },
+        {
+            x: result._x,
+            y: result._y,
+            mode: 'lines',
+            type: 'scatter',
+            line: {
+                color: 'red',
+                shape: 'spline'
+            },
+        }
+    ];
+
+    var layout = {
+        font: {family: "Roboto", color: '#272727'},
+        title: title,
+        margin: {l: 70, r: 30, t: 80, b: 60},
+        hovermode: false,
+        showlegend: false,
+        xaxis: {
+            color: '#272727',
+            title: 'Index of Difficulty'
+        },
+        yaxis: {
+            color: '#272727',
+            title: 'Movement Time (sec)'
+        }
+    }
+
+    Plotly.plot(canvas, data, layout);
+};
+
+Task.save = function(result){
+    var data = {
+        "mode": "SP",
+        "user": JSON.stringify(Task.user),
+        "settings": JSON.stringify(Task.settings),
+        "logs": JSON.stringify(Task.logs),
+        "results": JSON.stringify(result)
+    };
+
+    var _rest = $.ajax({
+        method: 'POST',
+        url: '/test/rest/save/',
+        data: data,
+    });
+
+    _rest.done(function(){
+        console.log("SAVED!");
     });
 
     _rest.fail(function(err){

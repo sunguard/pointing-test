@@ -4,6 +4,7 @@
 {% block nav-test %}sel{% endblock %}
 
 {% block js %}
+<script type="text/javascript" src="{% static 'js/plugin/plotly-1.27.1.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/pointing-temporal.js' %}"></script>
 <script type="text/javascript">
     $(document).ready(function(){
@@ -48,6 +49,9 @@
 </div>
 <div class="progress-area">
     <div class="progress-bar"><span class="progress-number">0</span> / <span class="progress-total">6</span></div>
+</div>
+<div class="result-area">
+    <div id="result-graph"></div>
 </div>
 
 {% endblock %}
