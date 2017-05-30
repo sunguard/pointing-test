@@ -328,7 +328,7 @@ Task.drawGraph = function(e){
             color: '#272727',
             title: 'Movement Time (sec)'
         }
-    }
+    };
 
     Plotly.plot(canvas, data, layout);
 };

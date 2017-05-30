@@ -184,4 +184,49 @@ def rest_result_temporal(request):
         return HttpResponseBadRequest("ERROR: rest_result_temporal failed.")
 
 def rest_result_combined(request):
-    pass
+    try:
+        settings = json.loads(request.POST.get("settings", None))
+        logs = json.loads(request.POST.get("logs", None))
+
+        xdata = [] # ID_s
+        ydata = [] # ID_t
+        zdata = [] # Err Rate
+
+        for log in logs:
+            T = log["start"]
+            D_s = numpy.float_(log["env"]["distance"])
+            W_s = numpy.float_(log["env"]["width"])
+            D_t = numpy.float_(log["env"]["interval"])
+            W_t = numpy.float_(log["env"]["duration"])
+            trial = numpy.float_(log["env"]["trial"])
+
+            C = trial
+
+            for stamp in log["timestamps"]:
+                if stamp[1] == "success":
+                    C -= 1
+
+            # ID_s
+            x = numpy.round(numpy.log2(D_s * 2 / W_s), decimals=2)
+            # ID_t
+            y = numpy.round(numpy.log2(D_t / W_t), decimals=2)
+            # Err Rate
+            z = numpy.round(numpy.float_(C) / trial, decimals=2)
+
+            xdata.append(x)
+            ydata.append(y)
+            zdata.append(z)
+
+        xdata = numpy.array(xdata)
+        ydata = numpy.array(ydata)
+        zdata = numpy.array(zdata)
+
+        output = {
+            'x': list(xdata),
+            'y': list(ydata),
+            'z': list(zdata)
+        }
+
+        return JsonResponse(output)
+    except:
+        return HttpResponseBadRequest("ERROR: rest_result_combined failed.")

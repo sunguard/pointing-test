@@ -37,6 +37,7 @@ Task.init = function(){
         area_notice: $('.notice-area'),
         area_notice_start: $('.notice-start-wrapper'),
         area_task: $('.task-area'),
+        area_result: $('.result-area'),
 
         objects: {
             all: $('.task-objects>button'),
@@ -304,4 +305,113 @@ Task.progress = function(){
 
 Task.result = function(){
     // SAVE AND REMOVE ALL DATA
+
+    var _rest = $.ajax({
+        method: 'POST',
+        url: '/test/rest/result/combined/',
+        data: {
+            "settings": JSON.stringify(Task.settings),
+            "logs": JSON.stringify(Task.logs)
+        },
+        dataType: 'json'
+    });
+
+    _rest.done(function(data){
+        $(Task.dom.btn_result).click({ result: data }, Task.drawGraph);
+        Task.save(data);
+    });
+
+    _rest.fail(function(err){
+        console.error(err.responseText);
+    });
+};
+
+Task.drawGraph = function(e){
+    $(Task.dom.area_result).fadeIn();
+
+    var canvas = document.getElementById('result-graph'),
+        result = e.data.result;
+
+    console.log(result);
+
+    var title = "Spatial-Temporal Pointing";
+
+    var data = [
+        {
+            x: result.x,
+            y: result.y,
+            z: result.z,
+            type: 'mesh3d',
+            color: 'rgb(255, 0, 0)',
+            vertexcolor: [
+                'rgb(0, 0, 255)', 'rgb(0, 255, 0)', 'rgb(255, 0, 0)',
+                'rgb(0, 0, 255)', 'rgb(0, 255, 0)', 'rgb(255, 0, 0)',
+                'rgb(0, 0, 255)', 'rgb(0, 255, 0)', 'rgb(255, 0, 0)'
+            ],
+            opacity: 0.25,
+            hoverinfo: "none"
+        },
+        {
+            x: result.x,
+            y: result.y,
+            z: result.z,
+            type: 'scatter3d',
+            mode: 'markers',
+            marker: {
+                color: '#272727',
+                size: 6
+            },
+            name: "data points",
+            hoverinfo: "x+y+z",
+            xsrc: "asdf"
+        }
+    ];
+
+    var layout = {
+        font: {family: "Roboto", color: '#272727'},
+        title: title,
+        margin: {l: 30, r: 30, t: 80, b: 20},
+        showlegend: false,
+        scene: {
+            xaxis: {
+                color: '#272727',
+                title: 'ID_spatial (X)',
+            },
+            yaxis: {
+                color: '#272727',
+                title: 'ID_temporal (Y)',
+            },
+            zaxis: {
+                color: '#272727',
+                title: 'Error Rate (Z)',
+            }
+        },
+        hovertext: ["ID_s", "ID_t", "err"]
+    };
+
+    Plotly.plot(canvas, data, layout);
+};
+
+Task.save = function(result){
+    var data = {
+        "mode": "STP",
+        "user": JSON.stringify(Task.user),
+        "settings": JSON.stringify(Task.settings),
+        "logs": JSON.stringify(Task.logs),
+        "results": JSON.stringify(result)
+    };
+
+    var _rest = $.ajax({
+        method: 'POST',
+        url: '/test/rest/save/',
+        data: data,
+    });
+
+    _rest.done(function(){
+        console.log("SAVED!");
+    });
+
+    _rest.fail(function(err){
+        console.error(err.responseText);
+    });
 };

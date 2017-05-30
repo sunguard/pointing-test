@@ -338,7 +338,7 @@ Task.drawGraph = function(e){
             color: '#272727',
             title: 'Error Rate'
         }
-    }
+    };
 
     Plotly.plot(canvas, data, layout);
 };
