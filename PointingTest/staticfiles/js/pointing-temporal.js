@@ -271,4 +271,22 @@ Task.progress = function(){
 
 Task.result = function(){
     // SAVE AND REMOVE ALL DATA
+
+    var _rest = $.ajax({
+        method: 'POST',
+        url: '/test/rest/result/temporal/',
+        data: {
+            "settings": JSON.stringify(Task.settings),
+            "logs": JSON.stringify(Task.logs)
+        },
+        dataType: 'json'
+    });
+
+    _rest.done(function(data){
+
+    });
+
+    _rest.fail(function(err){
+        console.error(err.responseText);
+    });
 };

@@ -115,6 +115,7 @@ Task.ready = function(settings){
         }
     }
 
+    Task.settings.id = settings.id;
     Task.settings.color = settings.color;
     Task.settings.trial = settings.trial;
     Task.settings.env = randomize(_env);
@@ -261,4 +262,22 @@ Task.progress = function(){
 
 Task.result = function(){
     // SAVE AND REMOVE ALL DATA
+
+    var _rest = $.ajax({
+        method: 'POST',
+        url: '/test/rest/result/spatial/',
+        data: {
+            "settings": JSON.stringify(Task.settings),
+            "logs": JSON.stringify(Task.logs)
+        },
+        dataType: 'json'
+    });
+
+    _rest.done(function(data){
+
+    });
+
+    _rest.fail(function(err){
+        console.error(err.responseText);
+    });
 };
